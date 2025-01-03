@@ -3,7 +3,11 @@ import json
 import asyncio
 
 from pathlib import Path
-from nonebot import require, get_driver
+from nonebot import (
+    require,
+    get_driver,
+    get_plugin_config
+)
 from nonebot.log import logger
 from nonebot.params import CommandArg
 from nonebot.typing import T_State
@@ -19,6 +23,8 @@ from nonebot.adapters.onebot.v11 import (
     MessageSegment,
     GroupMessageEvent
 )
+from .config import Config
+
 require("nonebot_plugin_localstore")
 import nonebot_plugin_localstore as store
 
@@ -27,30 +33,33 @@ __plugin_meta__ = PluginMetadata(
     description="复读羡慕，并收纳关键词，自动羡慕",
     usage="羡慕xxx/清空羡慕/当前羡慕",
     type="application",
+    config=Config,
     homepage="https://github.com/fllesser/nonebot-plugin-envious",
     supported_adapters={ "~onebot.v11" }
 )
 
-
 ENVIOUS_KEY: str = "_envious_key"
-MAX_LEN: int = 8
 
-keyword_set: set[str] = set()
+econfig: Config = get_plugin_config(Config)
+MAX_LEN: int = econfig.ENVIOUS_MAX_LEN
+# 需要按字符串长度排序，换用 list
+envious_list: list[str] = econfig.ENVIOUS_LIST
+envious_file: Path = store.get_plugin_data_file("envious.json")
+
 locks: dict[int, asyncio.Lock] = {}
 last_envious: dict[int, str] = {}
 
 @get_driver().on_startup
 async def _():
-    keywords_file: Path = store.get_plugin_data_file("keywords.json")
-    if not keywords_file.exists():
-        keywords_file.write_text(json.dumps(["koishi"]))
-    global keyword_set
-    keyword_set = set(json.loads(keywords_file.read_text()))
-    logger.info(f"羡慕: {keyword_set}")
+    global envious_list, envious_file
+    if not envious_file.exists():
+        envious_file.write_text(json.dumps(envious_list))
+    envious_list = json.loads(envious_file.read_text())
+    logger.info(f"羡慕: {envious_list}")
 
-def save_keywords():
-    keywords_file: Path = store.get_plugin_data_file("keywords.json")
-    keywords_file.write_text(json.dumps(list(keyword_set)))
+def save_envious():
+    global envious_list, envious_file
+    envious_file.write_text(json.dumps(envious_list))
 
 def contains_keywords(event: MessageEvent, state: T_State) -> bool:
     if not isinstance(event, GroupMessageEvent):
@@ -58,7 +67,8 @@ def contains_keywords(event: MessageEvent, state: T_State) -> bool:
     msg = event.get_message().extract_plain_text().strip()
     if not msg:
         return False
-    if key := next((k for k in keyword_set if k in msg), None):
+    global envious_list
+    if key := next((k for k in envious_list if k in msg), None):
         if key == last_envious.get(event.group_id):
             return False
         state[ENVIOUS_KEY] = key
@@ -89,6 +99,7 @@ async def _(event: GroupMessageEvent, state: T_State):
     keyword = state.get(ENVIOUS_KEY)
     gid = event.group_id
     
+    global locks, last_envious
     lock = locks.get(gid)
     if not lock:
         lock = asyncio.Lock()
@@ -103,6 +114,7 @@ async def _(event: GroupMessageEvent, args: Message = CommandArg()):
     keyword = args.extract_plain_text().strip()
     gid = event.group_id
     
+    global locks, last_envious
     if not keyword or '羡慕' in keyword or keyword == last_envious.get(gid):
         return
     if len(keyword) > MAX_LEN and (match := re.search(r'[0-9A-Za-z]+', keyword)):
@@ -116,21 +128,24 @@ async def _(event: GroupMessageEvent, args: Message = CommandArg()):
         locks[gid] = lock
     async with lock:
         last_envious[gid] = keyword
-        
-    keyword_set.add(keyword)
-    save_keywords()
+    if keyword not in envious_list:    
+        envious_list.append(keyword)
+        envious_list.sort(key=len, reverse=True)
+        save_envious()
     await add_keywords.send("羡慕" + keyword)
 
 @clear_envious.handle()
 async def _():
-    keyword_set.clear()
-    save_keywords()
+    global envious_list, envious_file
+    envious_list.clear()
+    if envious_file.exists():
+        envious_file.unlink()
     await clear_envious.send("哼(`3´)，我啥也不会羡慕了")
     
 @list_envious.handle()
 async def _():
-    if keywords_str := '、'.join(keyword_set):
-        res = "我现在巨tm羡慕" + keywords_str
+    if envious_str := '、'.join(envious_list):
+        res = f"我现在巨tm羡慕{envious_str}的人"
     else:
-        res = "不好意思，我啥也不羡慕"
+        res = "不好意思，我啥也不羡慕╭(╯^╰)╮"
     await list_envious.send(res)
