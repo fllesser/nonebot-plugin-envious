@@ -25,7 +25,7 @@ _✨ 羡慕 Koishi ✨_
 
 ## 📖 介绍
 
-这里是插件的详细介绍部分
+好羡慕啊(`3´)
 
 ## 💿 安装
 
@@ -33,8 +33,12 @@ _✨ 羡慕 Koishi ✨_
 <summary>使用 nb-cli 安装</summary>
 在 nonebot2 项目的根目录下打开命令行, 输入以下指令即可安装
 
-    nb plugin install nonebot-plugin-envious
+    nb plugin install nonebot-plugin-envious --upgrade
+    
+使用 pypi 源安装/更新
 
+    nb plugin install nonebot-plugin-envious --upgrade -i https://pypi.org/simple
+    
 </details>
 
 <details>
