@@ -1,7 +1,6 @@
 <div align="center">
-  <a href="https://v2.nonebot.dev/store"><img src="https://github.com/A-kirami/nonebot-plugin-envious/blob/resources/nbp_logo.png" width="180" height="180" alt="NoneBotPluginLogo"></a>
-  <br>
-  <p><img src="https://github.com/A-kirami/nonebot-plugin-envious/blob/resources/NoneBotPlugin.svg" width="240" alt="NoneBotPluginText"></p>
+    <a href="https://v2.nonebot.dev/store">
+    <img src="./.docs/NoneBotPlugin.svg" width="300" alt="logo"></a>
 </div>
 
 <div align="center">
@@ -23,15 +22,6 @@ _✨ 羡慕 Koishi ✨_
 
 </details>
 
-
-<details>
-<summary>配置发布工作流</summary>
-
-1. 前往 https://pypi.org/manage/account/#api-tokens 并创建一个新的 API 令牌。创建成功后不要关闭页面，不然你将无法再次查看此令牌。
-2. 在单独的浏览器选项卡或窗口中，打开 [Actions secrets and variables](./settings/secrets/actions) 页面。你也可以在 Settings - Secrets and variables - Actions 中找到此页面。
-3. 点击 New repository secret 按钮，创建一个名为 `PYPI_API_TOKEN` 的新令牌，并从第一步复制粘贴令牌。
-
-</details>
 
 ## 📖 介绍
 
