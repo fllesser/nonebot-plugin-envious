@@ -1,5 +1,4 @@
 from pydantic import BaseModel, confloat
-from typing import Literal
 
 class Config(BaseModel):
     ENVIOUS_MAX_LEN: int = 10
