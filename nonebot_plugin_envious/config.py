@@ -1,7 +1,7 @@
 from pydantic import BaseModel, confloat
 
 class Config(BaseModel):
-    ENVIOUS_MAX_LEN: int = 10
-    ENVIOUS_PROBABILITY: confloat(ge=0.0, le=1.0) = 0.7
-    ENVIOUS_LIST: list[str] = ['koishi']
+    envious_max_len: int = 10
+    envious_probability: confloat(ge=0.0, le=1.0) = 0.7
+    envious_list: list[str] = ['koishi']
     
