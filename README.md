@@ -82,9 +82,9 @@ _✨ 羡慕 Koishi ✨_
 
 | 配置项 | 必填 | 默认值 | 说明 |
 |:-----:|:----:|:----:|:----:|
-| ENVIOUS_MAX_LEN | 否 | 10 | 收纳羡慕关键词的最大字符串长度 |
-| ENVIOUS_PROBABILITY | 否 | 0.7 | 羡慕概率，只可填 0 ~ 1.0 之间的值|
-| ENVIOUS_LIST | 否 | ["koishi"] | 默认羡慕列表 |
+| envious_max_len | 否 | 10 | 收纳羡慕关键词的最大字符串长度 |
+| envious_probability | 否 | 0.7 | 羡慕概率，只可填 0 ~ 1.0 之间的值|
+| envious_list | 否 | ["koishi"] | 默认羡慕列表 |
 
 ## 🎉 使用
 ### 指令表

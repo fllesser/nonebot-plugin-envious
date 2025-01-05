@@ -26,9 +26,8 @@ from nonebot.adapters.onebot.v11 import (
     GroupMessageEvent
 )
 from .config import Config
+from .envious import GroupEnviousManager
 
-require("nonebot_plugin_localstore")
-import nonebot_plugin_localstore as store
 
 __plugin_meta__ = PluginMetadata(
     name="羡慕 koishi",
@@ -43,25 +42,15 @@ __plugin_meta__ = PluginMetadata(
 ENVIOUS_KEY: Literal["_envious_key"] = "_envious_key"
 
 econfig: Config = get_plugin_config(Config)
-MAX_LEN: int = econfig.ENVIOUS_MAX_LEN
-# 需要按字符串长度排序，换用 list
-envious_list: list[str] = econfig.ENVIOUS_LIST
-envious_file: Path = store.get_plugin_data_file("envious.json")
+MAX_LEN: int = econfig.envious_max_len
 
-locks: dict[int, asyncio.Lock] = {}
-last_envious: dict[int, str] = {}
+gem: GroupEnviousManager = GroupEnviousManager(econfig.envious_list)
 
 @get_driver().on_startup
 async def _():
-    global envious_list, envious_file
-    if not envious_file.exists():
-        envious_file.write_text(json.dumps(envious_list))
-    envious_list = json.loads(envious_file.read_text())
-    logger.info(f"羡慕: {envious_list}")
+    gem.load()
+    logger.info(f"羡慕: {gem.envious_list}")
 
-def save_envious():
-    global envious_list, envious_file
-    envious_file.write_text(json.dumps(envious_list))
 
 def contains_keywords(event: MessageEvent, state: T_State) -> bool:
     if not isinstance(event, GroupMessageEvent):
@@ -69,92 +58,56 @@ def contains_keywords(event: MessageEvent, state: T_State) -> bool:
     msg = event.get_message().extract_plain_text().strip()
     if not msg:
         return False
-    global envious_list
-    if key := next((k for k in envious_list if k in msg), None):
-        if key == last_envious.get(event.group_id):
+    if key := next((k for k in gem.envious_list if k in msg), None):
+        if gem.triggered(event.group_id, key):
             return False
         state[ENVIOUS_KEY] = key
         return True
     return False
 
 
-envious = on_message(
-    rule = contains_keywords,
-    priority = 1027
-)
-
-add_keywords = on_command(
-    cmd = '羡慕',
-    block = True
-)
-
-clear_envious = on_command(
-    cmd = '清空羡慕'
-)
-
-list_envious = on_command(
-    cmd = '当前羡慕'
-)
+envious = on_message(rule = contains_keywords, priority = 1027)
+envious_cmd = on_command(cmd = '羡慕', block = True)
+clear_envious = on_command(cmd = '清空羡慕')
+list_envious = on_command(cmd = '当前羡慕')
 
 @envious.handle()
 async def _(event: GroupMessageEvent, state: T_State):
     keyword = state.get(ENVIOUS_KEY)
-    gid = event.group_id
-    
-    global locks, last_envious
-    lock = locks.get(gid)
-    if not lock:
-        lock = asyncio.Lock()
-        locks[gid] = lock
-    async with lock:
-        last_envious[gid] = keyword
+    await gem.update_last_envious(event.group_id, keyword)
     await envious.send("羡慕" + keyword)
 
-@add_keywords.handle()
+@envious_cmd.handle()
 async def _(event: GroupMessageEvent, args: Message = CommandArg()):
     keyword = args.extract_plain_text().strip()
     gid = event.group_id
     
-    global last_envious
-    if not keyword or '羡慕' in keyword or keyword == last_envious.get(gid):
+    if not keyword or '羡慕' in keyword or gem.triggered(gid, keyword):
         return
     if len(keyword) > MAX_LEN and (match := re.search(r'[0-9A-Za-z]+', keyword)):
         keyword = match.group(0)
     if len(keyword) > MAX_LEN:
-        await add_keywords.finish("你在瞎羡慕什么呢？")
+        await envious_cmd.finish("你在瞎羡慕什么呢？")
     # 概率不羡慕
-    if random.random() > econfig.ENVIOUS_PROBABILITY:
+    if random.random() > econfig.envious_probability:
         res = random.choice([
             f"怎么5202年了，还有人羡慕{keyword}啊",
             "不是, 这tm有啥好羡慕的"
         ])
-        await add_keywords.finish(res)
+        await envious_cmd.finish(res)
         
-    global locks
-    lock = locks.get(gid)
-    if not lock:
-        lock = asyncio.Lock()
-        locks[gid] = lock
-    async with lock:
-        last_envious[gid] = keyword
-    if keyword not in envious_list:    
-        envious_list.append(keyword)
-        envious_list.sort(key=len, reverse=True)
-        save_envious()
-    await add_keywords.send("羡慕" + keyword)
+    await gem.update_last_envious(gid, keyword)
+    gem.add_envious(keyword)
+    await envious_cmd.send("羡慕" + keyword)
 
 @clear_envious.handle()
 async def _():
-    global envious_list, envious_file, last_envious
-    last_envious.clear()
-    envious_list.clear()
-    if envious_file.exists():
-        envious_file.unlink()
+    await gem.clear()
     await clear_envious.send("哼(`3´)，我啥也不会羡慕了")
     
 @list_envious.handle()
 async def _():
-    if envious_str := '、'.join(envious_list):
+    if envious_str := '、'.join(gem.envious_list):
         res = f"我现在巨tm羡慕{envious_str}"
     else:
         res = "不好意思，我啥也不羡慕"
