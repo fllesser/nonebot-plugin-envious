@@ -10,9 +10,18 @@ keywords = ["nonebot", "nonebot2", "envious", "koishi" ,"羡慕"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-nonebot2 = ">=2.3.0,<3.0.0"
-nonebot-adapter-onebot = ">=2.4.6,<3.0.0"
-nonebot-plugin-localstore = ">=0.7.0,<1.0.0"
+nonebot2 = "^2.4.0"
+nonebot-adapter-onebot = "^2.4.6"
+nonebot-plugin-localstore = "^0.7.0"
+
+[tool.poetry.group.test.dependencies]
+nb-cli = "^1.4.2"
+nonebot2 = {version = "^2.4.0", extras = ["fastapi"]}
+
+[tool.nonebot]
+adapters = [{name="OnebotAdapterV11", module_name="nonebot.adapters.onebot.v11"}]
+plugins = ["nonebot_plugin_envious"]
+
 
 [build-system]
 requires = ["poetry-core"]
