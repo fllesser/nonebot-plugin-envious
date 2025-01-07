@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-envious"
-version = "0.0.5"
+version = "0.0.6"
 description = "羡慕 koishi"
 authors = ["fllesser <fllessive@gmail.com>"]
 readme = "README.md"
