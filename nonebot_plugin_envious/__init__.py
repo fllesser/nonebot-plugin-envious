@@ -49,9 +49,10 @@ gem: GroupEnviousManager = GroupEnviousManager(econfig.envious_list)
 @get_driver().on_startup
 async def _():
     gem.load()
-    logger.info(f"羡慕: {gem.envious_list}")
-
-
+    logger.info(f"羡慕列表: {gem.envious_list}")
+    logger.info(f"羡慕关键词最大长度: {MAX_LEN} 羡慕概率: {econfig.envious_probability}")
+    
+    
 def contains_keywords(event: MessageEvent, state: T_State) -> bool:
     if not isinstance(event, GroupMessageEvent):
         return False
