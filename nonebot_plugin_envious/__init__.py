@@ -42,7 +42,6 @@ __plugin_meta__ = PluginMetadata(
 ENVIOUS_KEY: Literal["_envious_key"] = "_envious_key"
 
 econfig: Config = get_plugin_config(Config)
-MAX_LEN: int = econfig.envious_max_len
 
 gem: GroupEnviousManager = GroupEnviousManager(econfig.envious_list)
 
@@ -50,7 +49,7 @@ gem: GroupEnviousManager = GroupEnviousManager(econfig.envious_list)
 async def _():
     gem.load()
     logger.info(f"羡慕列表: {gem.envious_list}")
-    logger.info(f"羡慕关键词最大长度: {MAX_LEN} 羡慕概率: {econfig.envious_probability}")
+    logger.info(f"羡慕关键词最大长度: {econfig.envious_max_len} 羡慕概率: {econfig.envious_probability}")
     
     
 def contains_keywords(event: MessageEvent, state: T_State) -> bool:
@@ -85,9 +84,9 @@ async def _(event: GroupMessageEvent, args: Message = CommandArg()):
     
     if not keyword or '羡慕' in keyword or gem.triggered(gid, keyword):
         return
-    if len(keyword) > MAX_LEN and (match := re.search(r'[0-9A-Za-z]+', keyword)):
+    if len(keyword) > econfig.envious_max_len and (match := re.search(r'[0-9A-Za-z]+', keyword)):
         keyword = match.group(0)
-    if len(keyword) > MAX_LEN:
+    if len(keyword) > econfig.envious_max_len:
         await envious_cmd.finish("你在瞎羡慕什么呢？")
     # 概率不羡慕
     if random.random() > econfig.envious_probability:
