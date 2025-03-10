@@ -53,6 +53,7 @@ MAX_LEN: int = econfig.envious_max_len
 
 
 def contains_keywords(event: MessageEvent, state: T_State) -> bool:
+    state[ENVIOUS_KEY] = ""
     if not isinstance(event, GroupMessageEvent):
         return False
     msg = event.get_message().extract_plain_text().strip()
@@ -71,7 +72,7 @@ def Keyword() -> str:
 
 
 def _keyword(state: T_State) -> str:
-    return state.get(ENVIOUS_KEY, "")
+    return state[ENVIOUS_KEY]
 
 
 # 自动羡慕
