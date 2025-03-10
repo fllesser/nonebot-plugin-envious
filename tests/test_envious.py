@@ -1,4 +1,5 @@
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
+from nonebot.log import logger
 from nonebug import App
 import pytest
 
@@ -66,4 +67,5 @@ async def test_envious(app: App):
             ctx.receive_event(bot, event)
             if reply:
                 ctx.should_call_send(event, reply, result=None, bot=bot)
+                logger.success(f"羡慕{reply}")
             ctx.should_finished()
