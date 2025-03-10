@@ -67,5 +67,5 @@ async def test_envious(app: App):
             ctx.receive_event(bot, event)
             if reply:
                 ctx.should_call_send(event, reply, result=None, bot=bot)
-                logger.success(f"羡慕{reply}")
+                logger.success(f"实际回复: {reply}")
             ctx.should_finished()
