@@ -58,12 +58,12 @@ async def test_envious(app: App):
         "羡慕华为",
     ]
 
-    events = [make_onebot_msg(Message(message)) for message in messages]
-
     async with app.test_matcher(envious) as ctx:
         adapter = nonebot.get_adapter(OnebotV11Adapter)
         bot = ctx.create_bot(base=Bot, adapter=adapter)
-        for event, reply in zip(events, replys):
+        for msg, reply in zip(messages, replys):
+            logger.info(f"发送: {msg}, 期望回复: {reply}")
+            event = make_onebot_msg(Message(msg))
             ctx.receive_event(bot, event)
             if reply:
                 ctx.should_call_send(event, reply, result=None, bot=bot)
