@@ -3,7 +3,7 @@ from random import choice
 import re
 from typing import Literal
 
-from nonebot import get_driver, get_plugin_config, require
+from nonebot import get_driver, get_plugin_config, on_command, on_message, require
 from nonebot.adapters.onebot.v11 import (
     GroupMessageEvent,
     Message,
@@ -13,7 +13,6 @@ from nonebot.log import logger
 from nonebot.matcher import Matcher
 from nonebot.params import CommandArg, Depends
 from nonebot.plugin import PluginMetadata
-from nonebot.plugin.on import on_command, on_message
 from nonebot.typing import T_State
 
 require("nonebot_plugin_localstore")
@@ -72,16 +71,24 @@ def Keyword() -> str:
 
 
 def _keyword(state: T_State) -> str:
-    return state.get(ENVIOUS_KEY) or ""
+    return state.get(ENVIOUS_KEY, "")
 
 
-@on_message(rule=contains_keywords, priority=1027).handle()
+# 自动羡慕
+envious = on_message(rule=contains_keywords, priority=1027)
+
+
+@envious.handle()
 async def _(matcher: Matcher, event: GroupMessageEvent, keyword: str = Keyword()):
     await gem.update_last_envious(event.group_id, keyword)
     await matcher.send("羡慕" + keyword)
 
 
-@on_command(cmd="羡慕", block=True).handle()
+# 复读羡慕，并收纳关键词
+envious_cmd = on_command(cmd="羡慕", block=True)
+
+
+@envious_cmd.handle()
 async def _(matcher: Matcher, event: GroupMessageEvent, args: Message = CommandArg()):
     keyword = args.extract_plain_text().strip()
     gid = event.group_id
