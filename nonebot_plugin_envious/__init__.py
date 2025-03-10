@@ -53,7 +53,6 @@ MAX_LEN: int = econfig.envious_max_len
 
 
 def contains_keywords(event: MessageEvent, state: T_State) -> bool:
-    state[ENVIOUS_KEY] = ""
     if not isinstance(event, GroupMessageEvent):
         return False
     msg = event.get_message().extract_plain_text().strip()
@@ -81,7 +80,6 @@ envious = on_message(rule=contains_keywords, priority=1027)
 
 @envious.handle()
 async def _(matcher: Matcher, event: GroupMessageEvent, keyword: str = Keyword()):
-    logger.debug(f"羡慕{keyword}")
     await gem.update_last_envious(event.group_id, keyword)
     await matcher.send("羡慕" + keyword)
 
