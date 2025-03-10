@@ -80,6 +80,7 @@ envious = on_message(rule=contains_keywords, priority=1027)
 
 @envious.handle()
 async def _(matcher: Matcher, event: GroupMessageEvent, keyword: str = Keyword()):
+    logger.debug(f"羡慕{keyword}")
     await gem.update_last_envious(event.group_id, keyword)
     await matcher.send("羡慕" + keyword)
 

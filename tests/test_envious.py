@@ -65,5 +65,5 @@ async def test_envious(app: App):
         for event, reply in zip(events, replys):
             ctx.receive_event(bot, event)
             if reply:
-                ctx.should_call_send(event, Message(reply), result=None, bot=bot)
+                ctx.should_call_send(event, reply, result=None, bot=bot)
             ctx.should_finished()
