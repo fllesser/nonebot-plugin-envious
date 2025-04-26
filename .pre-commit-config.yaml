@@ -14,9 +14,3 @@ repos:
         stages: [pre-commit]
       - id: ruff-format
         stages: [pre-commit]
-
-  - repo: https://github.com/nonebot/nonemoji
-    rev: v0.1.4
-    hooks:
-      - id: nonemoji
-        stages: [prepare-commit-msg]

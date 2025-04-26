@@ -1,14 +1,8 @@
 <div align="center">
     <a href="https://v2.nonebot.dev/store">
-    <img src="./.docs/NoneBotPlugin.svg" width="300" alt="logo"></a>
-</div>
+    <img src="https://raw.githubusercontent.com/fllesser/nonebot-plugin-template/refs/heads/resource/.docs/NoneBotPlugin.svg" width="310" alt="logo"></a>
 
-<div align="center">
-
-# nonebot-plugin-envious
-
-_✨ 羡慕 Koishi ✨_
-
+## ✨ nonebot-plugin-enviou ✨
 
 <a href="./LICENSE">
     <img src="https://img.shields.io/github/license/fllesser/nonebot-plugin-envious.svg" alt="license">
@@ -16,8 +10,13 @@ _✨ 羡慕 Koishi ✨_
 <a href="https://pypi.python.org/pypi/nonebot-plugin-envious">
     <img src="https://img.shields.io/pypi/v/nonebot-plugin-envious.svg" alt="pypi">
 </a>
-<img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="python">
-
+<img src="https://img.shields.io/badge/python-3.10|3.11|3.12|3.13-blue.svg" alt="python">
+<a href="https://github.com/astral-sh/ruff">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json" alt="ruff">
+</a>
+<a href="https://github.com/astral-sh/uv">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" alt="uv">
+</a>
 </div>
 
 </details>
