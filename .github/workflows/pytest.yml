@@ -32,4 +32,4 @@ jobs:
 
     - name: Run all tests
       run: |
-        python -m pytest -v -s
+        uv run pytest
