@@ -49,6 +49,11 @@
 在 nonebot2 项目的插件目录下, 打开命令行, 根据你使用的包管理器, 输入相应的安装命令
 
 <details>
+<summary>conda</summary>
+
+    uv add nonebot-plugin-envious
+</details>
+<details>
 <summary>pip</summary>
 
     pip install nonebot-plugin-envious
@@ -63,11 +68,7 @@
 
     poetry add nonebot-plugin-envious
 </details>
-<details>
-<summary>conda</summary>
 
-    conda install nonebot-plugin-envious
-</details>
 
 打开 nonebot2 项目根目录下的 `pyproject.toml` 文件, 在 `[tool.nonebot]` 部分追加写入
 
@@ -79,16 +80,16 @@
 
 在 nonebot2 项目的`.env`文件中添加下表中的必填配置
 
-| 配置项 | 必填 | 默认值 | 说明 |
-|:-----:|:----:|:----:|:----:|
-| envious_max_len | 否 | 10 | 收纳羡慕关键词的最大字符串长度 |
-| envious_probability | 否 | 0.7 | 羡慕概率，只可填 0 ~ 1.0 之间的值|
-| envious_list | 否 | ["koishi"] | 默认羡慕列表 |
+|       配置项        | 必填  |   默认值   |               说明                |
+| :-----------------: | :---: | :--------: | :-------------------------------: |
+|   envious_max_len   |  否   |     10     |  收纳羡慕关键词的最大字符串长度   |
+| envious_probability |  否   |    0.7     | 羡慕概率，只可填 0 ~ 1.0 之间的值 |
+|    envious_list     |  否   | ["koishi"] |           默认羡慕列表            |
 
 ## 🎉 使用
 ### 指令表
-| 指令 | 权限 | 需要@ | 范围 | 说明 |
-|:-----:|:----:|:----:|:----:|:----:|
-| 羡慕 | 群员 | 否 | 群聊 | 顾名思义 |
-| 当前羡慕 | 群员 | 否 | 群聊 | 顾名思义 |
-| 清空羡慕 | 群员 | 否 | 群聊 | 顾名思义 |
+|   指令   | 权限  | 需要@ | 范围  |   说明   |
+| :------: | :---: | :---: | :---: | :------: |
+|   羡慕   | 群员  |  否   | 群聊  | 顾名思义 |
+| 当前羡慕 | 群员  |  否   | 群聊  | 顾名思义 |
+| 清空羡慕 | 群员  |  否   | 群聊  | 顾名思义 |
