@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "羡慕 koishi"
 readme = "README.md"
 keywords = ["nonebot", "nonebot2", "envious", "koishi", "羡慕"]
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.13,<3.14"
 urls = { "Repository" = "https://github.com/fllesser/nonebot-plugin-envious", "Tracker" = "https://github.com/fllesser/nonebot-plugin-envious/issues" }
 
 authors = [{ name = "fllesser", email = "fllessive@gmail.com" }]
