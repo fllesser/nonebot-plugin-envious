@@ -57,7 +57,5 @@ class GroupEnviousManager:
 
     async def clear(self):
         self.envious_list.clear()
-        if self.envious_file.exists():
-            self.save()
-        for le in self.group_envious.values():
-            await le.update("")
+        self.save()
+        await asyncio.gather(*[le.update("") for le in self.group_envious.values()])
