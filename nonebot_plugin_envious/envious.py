@@ -70,6 +70,6 @@ class GroupEnviousManager:
 
     async def clear(self):
         """清空所有群的羡慕记录"""
-        self.group_envious.clear()
+        self.envious_list.clear()
         self.save()
         await asyncio.gather(*[le.update("") for le in self.group_envious.values()])
