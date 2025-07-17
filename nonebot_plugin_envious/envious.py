@@ -58,6 +58,6 @@ class GroupEnviousManager:
     async def clear(self):
         self.envious_list.clear()
         if self.envious_file.exists():
-            self.envious_file.unlink()
-        for _, le in self.group_envious.items():
+            self.save()
+        for le in self.group_envious.values():
             await le.update("")

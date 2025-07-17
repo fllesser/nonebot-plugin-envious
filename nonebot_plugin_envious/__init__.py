@@ -43,8 +43,9 @@ async def _():
 
 
 # 每天凌晨0点清空羡慕
-@scheduler.scheduled_job("cron", hour=0, minute=0, id="clear_envious")
+@scheduler.scheduled_job("cron", hour=0, minute=0, id="clear_envious", misfire_grace_time=60)
 async def clear_envious():
+    logger.info("羡慕关键词已清空")
     await gem.clear()
 
 
