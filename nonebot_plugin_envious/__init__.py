@@ -88,6 +88,9 @@ envious = on_message(rule=contains_keywords, priority=1027)
 @envious.handle()
 async def _(matcher: Matcher, event: GroupMessageEvent, keyword: str = Keyword()):
     await gem.update_last_envious(event.group_id, keyword)
+    # 如果 keyword 不包含中文，则补充空格
+    if not re.match(r"[\u4e00-\u9fa5]+", keyword):
+        keyword = " " + keyword
     await matcher.send("羡慕" + keyword)
 
 
@@ -108,7 +111,7 @@ async def _(matcher: Matcher, event: GroupMessageEvent, args: Message = CommandA
         await matcher.finish("你在瞎羡慕什么呢？")
     # 概率不羡慕
     if random.random() > econfig.envious_probability:
-        res = random.choice([f"怎么5202年了，还有人羡慕{keyword}啊", "不是, 这tm有啥好羡慕的"])
+        res = random.choice([f"怎么5202年了, 还有人羡慕{keyword}啊", "不是, 这 tm 有啥好羡慕的"])
         await matcher.finish(res)
 
     await gem.update_last_envious(gid, keyword)
