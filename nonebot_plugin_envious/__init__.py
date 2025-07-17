@@ -42,11 +42,17 @@ async def _():
     logger.info(f"羡慕关键词最大长度: {MAX_LEN} 羡慕概率: {econfig.envious_probability}")
 
 
-# 每天凌晨0点清空羡慕
-@scheduler.scheduled_job("cron", hour=0, minute=0, id="clear_envious", misfire_grace_time=60)
-async def clear_envious():
-    await gem.clear()
-    logger.info("羡慕关键词已清空")
+# 每天凌晨0点重置羡慕
+@scheduler.scheduled_job(
+    "cron",
+    hour=0,
+    minute=0,
+    id="reset_envious",
+    misfire_grace_time=60,
+)
+async def reset_envious():
+    await gem.reset()
+    logger.info("羡慕关键词已重置")
 
 
 ENVIOUS_KEY: Literal["_envious_key"] = "_envious_key"
