@@ -47,14 +47,14 @@ async def test_envious(app: App):
     ]
 
     replys = [
-        "羡慕koishi",
+        "羡慕 koishi",
         "羡慕华为",
-        "羡慕koishi",
+        "羡慕 koishi",
         None,
         "羡慕华为",
         None,
         None,
-        "羡慕koishi",
+        "羡慕 koishi",
         "羡慕华为",
     ]
 

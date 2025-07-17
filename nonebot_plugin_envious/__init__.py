@@ -31,6 +31,7 @@ __plugin_meta__ = PluginMetadata(
     homepage="https://github.com/fllesser/nonebot-plugin-envious",
     supported_adapters={"~onebot.v11"},
 )
+
 econfig: Config = get_plugin_config(Config)
 gem: GroupEnviousManager = GroupEnviousManager(econfig.envious_list)
 
@@ -88,6 +89,9 @@ envious = on_message(rule=contains_keywords, priority=1027)
 @envious.handle()
 async def _(matcher: Matcher, event: GroupMessageEvent, keyword: str = Keyword()):
     await gem.update_last_envious(event.group_id, keyword)
+    # 如果 keyword 不包含中文，则补充空格
+    if not re.match(r"[\u4e00-\u9fa5]+", keyword):
+        keyword = " " + keyword
     await matcher.send("羡慕" + keyword)
 
 
@@ -105,10 +109,10 @@ async def _(matcher: Matcher, event: GroupMessageEvent, args: Message = CommandA
     if len(keyword) > MAX_LEN and (match := re.search(r"[0-9A-Za-z]+", keyword)):
         keyword = match.group(0)
     if len(keyword) > MAX_LEN:
-        await matcher.finish("你在瞎羡慕什么呢？")
+        await matcher.finish("不是, 你在瞎jb羡慕什么呢?")
     # 概率不羡慕
     if random.random() > econfig.envious_probability:
-        res = random.choice([f"怎么5202年了，还有人羡慕{keyword}啊", "不是, 这tm有啥好羡慕的"])
+        res = random.choice([f"怎么5202年了, 还有人羡慕{keyword}啊", "不是, 这踏🐎有啥好羡慕的"])
         await matcher.finish(res)
 
     await gem.update_last_envious(gid, keyword)
@@ -119,7 +123,7 @@ async def _(matcher: Matcher, event: GroupMessageEvent, args: Message = CommandA
 @on_command(cmd="清空羡慕").handle()
 async def _(matcher: Matcher):
     await gem.clear()
-    await matcher.send("哼(`3´)，我啥也不会羡慕了")
+    await matcher.send("啥也不羡慕了")
 
 
 ENVIOUS_MESSAGES = [
@@ -130,7 +134,12 @@ ENVIOUS_MESSAGES = [
     "现在最羡慕的就是{target}了",
 ]
 
-NOT_ENVIOUS_MESSAGES = ["不好意思，我啥也不羡慕", "我对什么都很知足", "我现在很满足", "没有特别羡慕的呢"]
+NOT_ENVIOUS_MESSAGES = [
+    "不好意思，我啥也不羡慕",
+    "我对什么都很知足",
+    "我现在很满足",
+    "没有特别羡慕的呢",
+]
 
 
 @on_command(cmd="当前羡慕").handle()
