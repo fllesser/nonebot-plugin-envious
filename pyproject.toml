@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-plugin-envious"
-version = "0.1.4"
+version = "0.1.5"
 description = "羡慕 koishi"
 readme = "README.md"
 keywords = ["nonebot", "nonebot2", "envious", "koishi", "羡慕"]
@@ -123,7 +123,7 @@ requires = ["uv_build>=0.8.8,<0.9.0"]
 build-backend = "uv_build"
 
 [tool.bumpversion]
-current_version = "0.1.4"
+current_version = "0.1.5"
 commit = true
 message = "🔖 release: bump vesion from {current_version} to {new_version}"
 tag = true
