@@ -1,13 +1,15 @@
-name: pytest
+name: Pytest
 
 on:
   push:
     branches:
       - 'master'
+    paths-ignore:
+      - 'README.md'
   pull_request:
 
 jobs:
-  build:
+  pytest:
     runs-on: ubuntu-latest
     env:
       LOG_LEVEL: DEBUG
@@ -29,8 +31,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
         version: 'latest'
     
-    - name: Install Dependencies for all groups
-      run: uv sync --all-groups
+    - name: Install Dependencies for test group
+      run: uv sync --group test
 
     - name: Run all tests
       run: uv run pytest
