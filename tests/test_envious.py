@@ -5,9 +5,14 @@ import pytest
 
 
 def make_onebot_msg(message: Message) -> GroupMessageEvent:
+    from random import randint
     from time import time
 
     from nonebot.adapters.onebot.v11.event import Sender
+
+    message_id = randint(1000000000, 9999999999)
+    user_id = randint(1000000000, 9999999999)
+    group_id = 123456789
 
     event = GroupMessageEvent(
         time=int(time()),
@@ -15,13 +20,13 @@ def make_onebot_msg(message: Message) -> GroupMessageEvent:
         self_id=123456,
         post_type="message",
         message_type="group",
-        message_id=12345623,
-        user_id=1234567890,
-        group_id=1234567890,
+        message_id=message_id,
+        user_id=user_id,
+        group_id=group_id,
         raw_message=message.extract_plain_text(),
         message=message,
         original_message=message,
-        sender=Sender(),
+        sender=Sender(user_id=user_id, nickname="TestUser"),
         font=123456,
     )
     return event
@@ -32,36 +37,28 @@ async def test_envious(app: App):
     import nonebot
     from nonebot.adapters.onebot.v11 import Adapter as OnebotV11Adapter
 
-    from nonebot_plugin_envious import envious
+    from nonebot_plugin_envious import envious, envious_cmd
 
-    messages = [
-        "koishi",
-        "华为",
-        "koishi",
-        "koishi",
-        "华为",
-        "华为",
-        "刘德华为什么很少演反派",
-        "koishi",
-        "刘德华为什么很少演反派",
+    message_reply_tuples = [
+        ("羡慕了", "羡慕了"),
+        ("没事了", None),
+        ("羡慕了", None),
+        ("koishi", "羡慕 koishi"),
+        ("没事了", None),
+        ("华为", "羡慕华为"),
+        ("koishi", "羡慕 koishi"),
+        ("koishi", None),
+        ("华为", "羡慕华为"),
+        ("华为", None),
+        ("刘德华为什么很少演反派", None),
+        ("koishi", "羡慕 koishi"),
+        ("刘德华为什么很少演反派", "羡慕华为"),
     ]
 
-    replys = [
-        "羡慕 koishi",
-        "羡慕华为",
-        "羡慕 koishi",
-        None,
-        "羡慕华为",
-        None,
-        None,
-        "羡慕 koishi",
-        "羡慕华为",
-    ]
-
-    async with app.test_matcher(envious) as ctx:
+    async with app.test_matcher([envious_cmd, envious]) as ctx:
         adapter = nonebot.get_adapter(OnebotV11Adapter)
         bot = ctx.create_bot(base=Bot, adapter=adapter)
-        for msg, reply in zip(messages, replys):
+        for msg, reply in message_reply_tuples:
             logger.info(f"发送: {msg}, 期望回复: {reply}")
             event = make_onebot_msg(Message(msg))
             ctx.receive_event(bot, event)
