@@ -31,7 +31,7 @@ dev = [
 ]
 
 test = [
-    "nonebot2[fastapi, httpx, websockets]>=2.4.2,<3.0.0",
+    "nonebot2[fastapi]>=2.4.2,<3.0.0",
     "nonebug>=0.3.7,<1.0.0",
     "pytest-xdist>=3.8.0,<4.0.0",
     "pytest-asyncio>=1.2.0,<1.3.0",
@@ -46,17 +46,15 @@ required-version = ">=0.8.14"
 default-groups = ["test", "dev"]
 
 
-[tool.nonebot]
-adapters = [
-    { name = "OnebotAdapterV11", module_name = "nonebot.adapters.onebot.v11" },
-]
-plugins = ["nonebot_plugin_envious"]
-
 [tool.poe.tasks]
 test = "pytest --cov=src --cov-report xml --junitxml=./junit.xml -n auto"
 bump = "bump-my-version bump"
 show-bump = "bump-my-version show-bump"
 
+[tool.coverage.report]
+# show_missing = true
+omit = ["tests/*"]
+exclude_lines = ["raise NotImplementedError", "if TYPE_CHECKING:", "@overload"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -70,6 +68,12 @@ addopts = [
     "--strict-markers",      # 严格标记模式
     "--import-mode=prepend", # 导入模式
 ]
+
+[tool.nonebot]
+adapters = [
+    { name = "OnebotAdapterV11", module_name = "nonebot.adapters.onebot.v11" },
+]
+plugins = ["nonebot_plugin_envious"]
 
 [tool.ruff]
 line-length = 120
