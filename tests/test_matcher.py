@@ -3,7 +3,7 @@ from typing_extensions import override
 from fake import fake_group_message_event_v11, fake_private_message_event_v11
 from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
 from nonebot.log import logger
-from nonebug import Any, App
+from nonebug import App
 import pytest
 
 
@@ -100,7 +100,7 @@ async def test_current_envious(app: App):
 
     logger.info(f"TEST_CURRENT_ENVIOUS ||||||| envious_list: {gem.envious_list}")
 
-    class CurrentEnviousResult(Any):
+    class CurrentEnviousResult:
         @override
         def __eq__(self, other) -> bool:
             assert isinstance(other, str)
@@ -116,9 +116,9 @@ async def test_current_envious(app: App):
         bot = ctx.create_bot(base=Bot, adapter=adapter)
         event = fake_group_message_event_v11(message="当前羡慕")
         ctx.receive_event(bot, event)
-        ctx.should_call_send(event, CurrentEnviousResult(), result=None, bot=bot)
+        ctx.should_call_send(event, CurrentEnviousResult(), result=None, bot=bot)  # type: ignore
 
-    class NotEnviousResult(Any):
+    class NotEnviousResult:
         @override
         def __eq__(self, other) -> bool:
             assert isinstance(other, str)
@@ -133,4 +133,4 @@ async def test_current_envious(app: App):
         bot = ctx.create_bot(base=Bot, adapter=adapter)
         event = fake_group_message_event_v11(message="当前羡慕")
         ctx.receive_event(bot, event)
-        ctx.should_call_send(event, NotEnviousResult(), result=None, bot=bot)
+        ctx.should_call_send(event, NotEnviousResult(), result=None, bot=bot)  # type: ignore
