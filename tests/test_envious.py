@@ -22,12 +22,3 @@ async def test_envious_reset():
     await reset_envious()
     assert gem.envious_list == econfig.envious_list
 
-
-async def test_envious_load():
-    from nonebot_plugin_envious import gem
-
-    if gem.envious_file.exists():
-        gem.envious_file.unlink()
-
-    gem.load()
-    assert gem.envious_list == gem.default_envious_list

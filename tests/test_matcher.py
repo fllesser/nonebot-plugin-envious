@@ -1,10 +1,9 @@
-from typing import Any
 from typing_extensions import override
 
 from fake import fake_group_message_event_v11, fake_private_message_event_v11
 from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment
 from nonebot.log import logger
-from nonebug import App
+from nonebug import Any, App
 import pytest
 
 
