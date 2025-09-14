@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "uv.lock"
+
+jobs:
+      
+  typos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5 # v5
+      - uses: crate-ci/typos@master
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    concurrency:
+      group: test-coverage-${{ github.ref }}-${{ matrix.python-version }}-${{ matrix.pydantic-version }}
+      cancel-in-progress: true
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # pydantic-version: [pydantic-v1, pydantic-v2]
+    env:
+      UV_NO_SYNC: 1
+      PYTHON_VERSION: ${{ matrix.python-version }}
+      # PYDANTIC_VERSION: ${{ matrix.pydantic-version }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+          version: "latest"
+
+      - name: Install Dependencies for test group
+        run: uv sync --no-dev --locked
+
+      - name: Run Pytest
+        run: uv run poe test
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          env_vars: PYTHON_VERSION,PYDANTIC_VERSION
+          use_oidc: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          env_vars: PYTHON_VERSION,PYDANTIC_VERSION
+          use_oidc: true
