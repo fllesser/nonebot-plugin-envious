@@ -55,19 +55,6 @@ async def test_envious(app: App):
 
 
 @pytest.mark.asyncio
-async def test_envious_clear(app: App):
-    import nonebot
-    from nonebot.adapters.onebot.v11 import Adapter as OnebotV11Adapter
-
-    async with app.test_matcher() as ctx:
-        adapter = nonebot.get_adapter(OnebotV11Adapter)
-        bot = ctx.create_bot(base=Bot, adapter=adapter)
-        event = fake_group_message_event_v11(message="清空羡慕")
-        ctx.receive_event(bot, event)
-        ctx.should_call_send(event, "啥也不羡慕了", result=None, bot=bot)
-
-
-@pytest.mark.asyncio
 async def test_big_len_envious(app: App):
     import nonebot
     from nonebot.adapters.onebot.v11 import Adapter as OnebotV11Adapter
@@ -134,3 +121,16 @@ async def test_current_envious(app: App):
         event = fake_group_message_event_v11(message="当前羡慕")
         ctx.receive_event(bot, event)
         ctx.should_call_send(event, NotEnviousResult(), result=None, bot=bot)  # type: ignore
+
+
+@pytest.mark.asyncio
+async def test_envious_clear(app: App):
+    import nonebot
+    from nonebot.adapters.onebot.v11 import Adapter as OnebotV11Adapter
+
+    async with app.test_matcher() as ctx:
+        adapter = nonebot.get_adapter(OnebotV11Adapter)
+        bot = ctx.create_bot(base=Bot, adapter=adapter)
+        event = fake_group_message_event_v11(message="清空羡慕")
+        ctx.receive_event(bot, event)
+        ctx.should_call_send(event, "啥也不羡慕了", result=None, bot=bot)

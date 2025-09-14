@@ -23,3 +23,10 @@ async def after_nonebot_init(after_nonebot_init: None):
 
     # 加载插件
     nonebot.load_from_toml("pyproject.toml")
+
+
+@pytest.fixture(scope="function", autouse=True)  # noqa: PT003
+async def reset_envious():
+    from nonebot_plugin_envious import gem
+
+    await gem.reset()

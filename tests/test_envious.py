@@ -1,7 +1,6 @@
 async def test_envious_add_envious():
     from nonebot_plugin_envious import gem
 
-    await gem.reset()
     gem.add_envious("刘德华")
     gem.add_envious("刘德华")
     assert "刘德华" in gem.envious_list
