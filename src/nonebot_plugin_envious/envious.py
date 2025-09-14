@@ -11,12 +11,7 @@ class LastEnvious:
         self.last_envious = last_envious
 
     def __eq__(self, other) -> bool:
-        if isinstance(other, str):
-            return self.last_envious == other
-        return NotImplemented
-
-    def __str__(self):
-        return self.last_envious
+        return self.last_envious == other if isinstance(other, str) else False
 
     async def update(self, envious: str) -> None:
         async with self.lock:

@@ -54,7 +54,11 @@ show-bump = "bump-my-version show-bump"
 [tool.coverage.report]
 # show_missing = true
 omit = ["tests/*"]
-exclude_lines = ["raise NotImplementedError", "if TYPE_CHECKING:", "@overload"]
+exclude_lines = [
+    "if TYPE_CHECKING:",
+    "if random.random()",
+    "raise NotImplementedError",
+]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
