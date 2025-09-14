@@ -21,4 +21,3 @@ async def test_envious_reset():
 
     await reset_envious()
     assert gem.envious_list == econfig.envious_list
-
