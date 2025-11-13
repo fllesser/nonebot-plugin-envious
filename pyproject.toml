@@ -95,7 +95,6 @@ addopts = [
   "--strict-markers",  # 严格标记模式
   "--import-mode=prepend",  # 导入模式
 ]
-strict_markers = true  # 严格标记模式（新增配置项）
 
 [tool.ruff]
 line-length = 120
