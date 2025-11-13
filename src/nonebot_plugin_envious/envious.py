@@ -1,6 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
+from typing import ClassVar
 
 import nonebot_plugin_localstore as store
 
@@ -19,6 +20,8 @@ class LastEnvious:
 
 
 class GroupEnviousManager:
+    BLACK_KEYWORDS: ClassVar[list[str]] = ["啊", "了"]
+
     def __init__(self, envious_list: list[str]):
         # 默认羡慕列表
         self.default_envious_list: list[str] = envious_list.copy()
@@ -41,10 +44,12 @@ class GroupEnviousManager:
 
     def add_envious(self, envious: str):
         """添加羡慕词"""
-        if envious not in self.envious_list:
-            self.envious_list.append(envious)
-            self.envious_list.sort(key=len, reverse=True)
-            self.save()
+        if envious in self.BLACK_KEYWORDS or envious in self.envious_list:
+            return
+
+        self.envious_list.append(envious)
+        self.envious_list.sort(key=len, reverse=True)
+        self.save()
 
     async def update_last_envious(self, gid: int, envious: str):
         """更新当前群的羡慕记录"""
