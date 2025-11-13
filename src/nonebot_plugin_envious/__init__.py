@@ -97,8 +97,6 @@ async def _(matcher: Matcher, event: GroupMessageEvent, keyword: str = Keyword()
 
 # 复读羡慕，并收纳关键词
 envious_cmd = on_command(cmd="羡慕", block=True)
-# 高频字词
-high_frequency_words = ["了"]
 
 
 @envious_cmd.handle()
@@ -118,10 +116,7 @@ async def _(matcher: Matcher, event: GroupMessageEvent, args: Message = CommandA
         await matcher.finish(res)
 
     await gem.update_last_envious(gid, keyword)
-
-    if keyword not in high_frequency_words:
-        gem.add_envious(keyword)
-
+    gem.add_envious(keyword)
     await matcher.send("羡慕" + keyword)
 
 
@@ -135,7 +130,6 @@ ENVIOUS_MESSAGES = [
     "我现在超级羡慕{target}",
     "说实话，我真的好羡慕{target}",
     "唉，要是我也能像{target}就好了",
-    "羡慕死了{target}",
     "现在最羡慕的就是{target}了",
 ]
 
