@@ -2,7 +2,7 @@
 
 [project]
 name = "nonebot-plugin-envious"
-version = "0.1.5"
+version = "0.1.6"
 description = "羡慕 koishi"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -44,7 +44,7 @@ requires = ["uv_build>=0.9.1,<0.10.0"]
 build-backend = "uv_build"
 
 [tool.bumpversion]
-current_version = "0.1.5"
+current_version = "0.1.6"
 commit = true
 message = "🔖 release: bump vesion from {current_version} to {new_version}"
 tag = true
